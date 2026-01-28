@@ -1,0 +1,27 @@
+app = "rust-sqlite-api"
+kill_signal = "SIGINT"
+kill_timeout = 5
+processes = []
+
+[build]
+  image = "rust:latest"                             # Fly.io will use this Docker image to build
+
+[env]
+  DATABASE_URL = "sqlite:database/app.db"           # optional, for environment variables
+
+[[services]]
+  internal_port = 8000
+  protocol = "tcp"
+
+  [[services.ports]]
+    handlers = ["http"]
+    port = 80
+
+  [[services.ports]]
+    handlers = ["tls", "http"]
+    port = 443
+
+  [[services.tcp_checks]]
+    interval = 10000
+    timeout = 2000
+    restart_limit = 0
